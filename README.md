@@ -133,7 +133,7 @@
   </section>
 
   <footer>
-    <p>Compiled for Renalfa by Kniaz Boris | Weekly Updates Every Friday</p>
+    <p>Compiled for Renalfa by Boris | Weekly Updates Every Friday</p>
   </footer>
 </body>
 </html>
