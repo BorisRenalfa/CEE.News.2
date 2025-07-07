@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Renewable Energy News - CCE Weekly Digest</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #000a60; color: #000000; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #000a60; color: #FFFFFF; margin: 0; padding: 0; }
     header { background: #000a60; color: white; padding: 1em; text-align: center; }
     section { max-width: 960px; margin: 20px auto; padding: 10px; background: white; border-radius: 8px; }
     h2 { border-bottom: 2px solid #ccc; padding-bottom: 5px; }
