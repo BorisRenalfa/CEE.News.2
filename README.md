@@ -138,3 +138,54 @@
 </body>
 </html>
 
+import json
+from datetime import datetime
+
+articles = [
+    {
+        "title": "Solarpro to Build 200 MW PV Plant in Yambol Province",
+        "url": "https://www.capital.bg/",
+        "date": "2025-07-05",
+        "source": "Capital.bg",
+        "summary": "Solarpro announced a €140M photovoltaic plant to be completed by 2026.",
+        "tags": ["Solar", "PV", "Investment"],
+        "entities": ["Solarpro", "EU Green Deal"],
+        "country": "Bulgaria"
+    },
+    {
+        "title": "North Macedonia to Launch First Battery Storage Tender by October",
+        "url": "https://mia.mk/",
+        "date": "2025-07-03",
+        "source": "MIA.mk",
+        "summary": "Government to tender a 20 MW BESS system with EU/EBRD funds.",
+        "tags": ["Battery", "BESS", "Grid"],
+        "entities": ["EBRD", "Ministry of Economy", "EU"],
+        "country": "North Macedonia"
+    },
+    {
+        "title": "Hungary Approves HUF 30B in Green Energy Subsidies",
+        "url": "https://portfolio.hu",
+        "date": "2025-07-01",
+        "source": "Portfolio.hu",
+        "summary": "Subsidies targeted at storage-integrated solar and wind projects.",
+        "tags": ["Policy", "Solar", "Wind", "Storage"],
+        "entities": ["Hungarian Energy Authority"],
+        "country": "Hungary"
+    },
+    {
+        "title": "OMV Petrom to Build 500 EV Charging Points in Romania by 2027",
+        "url": "https://www.romania-insider.com",
+        "date": "2025-07-06",
+        "source": "Romania Insider",
+        "summary": "Joint initiative with Enel X to accelerate EV infrastructure.",
+        "tags": ["EV", "Charging", "Infrastructure"],
+        "entities": ["OMV Petrom", "Enel"],
+        "country": "Romania"
+    }
+]
+
+# Save as JSON
+with open("weekly_news.json", "w", encoding="utf-8") as f:
+    json.dump(articles, f, ensure_ascii=False, indent=2)
+
+print("Weekly news JSON saved.")
