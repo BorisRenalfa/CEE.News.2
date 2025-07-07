@@ -284,3 +284,42 @@ jobs:
         git add index.html
         git commit -m "Weekly news update"
         git push
+name: Weekly News Crawler Update
+
+on:
+  schedule:
+    - cron: '0 7 * * 5'  # Every Friday at 07:00 UTC
+  workflow_dispatch:     # Manual trigger
+  push:
+    paths:
+      - 'crawler/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run crawler and update HTML
+      run: |
+        python crawler/generate_news.py
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add index.html
+        git commit -m "Weekly news update"
+        git push
