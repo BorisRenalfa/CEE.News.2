@@ -189,3 +189,98 @@ with open("weekly_news.json", "w", encoding="utf-8") as f:
     json.dump(articles, f, ensure_ascii=False, indent=2)
 
 print("Weekly news JSON saved.")
+
+import datetime
+
+# Load your updated article data from an API or local file (to be built later)
+html_template = """<article>
+  <h3><a href="{url}">{title}</a></h3>
+  <div class="meta">{date} | {source}</div>
+  <p>{summary}</p>
+  <div class="tags">Tags: {tags} | Entities: {entities}</div>
+</article>"""
+
+# Simulated article data (replace with crawler results)
+sample_article = html_template.format(
+    url="https://www.example.com",
+    title="Sample Renewable News Headline",
+    date=datetime.date.today().strftime("%B %d, %Y"),
+    source="Sample News",
+    summary="This is a summary of a renewable energy event or policy update.",
+    tags="Solar, PV",
+    entities="EU, EBRD"
+)
+
+# Insert your logic to replace articles in index.html
+with open("index.html", "r", encoding="utf-8") as f:
+    content = f.read()
+
+# Replace just Bulgaria section content for demo (expand later)
+start_marker = "<section>\n    <h2>🇫🇬 Bulgaria</h2>"
+end_marker = "<section>\n    <h2>🇲🇰 North Macedonia</h2>"
+
+start_index = content.find(start_marker)
+end_index = content.find(end_marker)
+
+# Replace the Bulgaria section
+new_section = f"""{start_marker}
+    {sample_article}
+</section>
+"""
+updated = content[:start_index] + new_section + content[end_index:]
+
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(updated)
+3. Dependencies File (requirements.txt)
+txt
+Copy
+Edit
+beautifulsoup4
+requests
+(Adjust when the actual crawler is integrated.)
+
+4. Create GitHub Actions Workflow
+Create file: .github/workflows/update-site.yml
+
+yaml
+Copy
+Edit
+name: Weekly News Crawler Update
+
+on:
+  schedule:
+    - cron: '0 7 * * 5'  # Every Friday at 07:00 UTC
+  workflow_dispatch:     # Manual trigger
+  push:
+    paths:
+      - 'crawler/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Run crawler and update HTML
+      run: |
+        python crawler/generate_news.py
+
+    - name: Commit and push changes
+      run: |
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        git add index.html
+        git commit -m "Weekly news update"
+        git push
