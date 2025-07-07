@@ -323,3 +323,113 @@ jobs:
         git add index.html
         git commit -m "Weekly news update"
         git push
+
+        import requests
+from bs4 import BeautifulSoup
+from datetime import datetime
+
+# Define influential renewable energy news websites
+news_sources = [
+    {
+        "name": "PV Magazine",
+        "url": "https://www.pv-magazine.com/category/markets-policy/",
+        "article_tag": "article",
+        "headline_selector": "h3 a",
+        "summary_selector": "p",
+        "date_selector": None  # Not always available
+    },
+    {
+        "name": "Recharge News",
+        "url": "https://www.rechargenews.com/transition/",
+        "article_tag": "article",
+        "headline_selector": "h3 a",
+        "summary_selector": "p",
+        "date_selector": None
+    },
+    {
+        "name": "Energy Monitor",
+        "url": "https://www.energymonitor.ai/sectors/power/",
+        "article_tag": "article",
+        "headline_selector": "h2 a",
+        "summary_selector": "p",
+        "date_selector": None
+    },
+    {
+        "name": "IEA",
+        "url": "https://www.iea.org/news",
+        "article_tag": "li",
+        "headline_selector": "a",
+        "summary_selector": None,
+        "date_selector": "time"
+    },
+    {
+        "name": "Bloomberg Green",
+        "url": "https://www.bloomberg.com/green",
+        "article_tag": "article",
+        "headline_selector": "h3 a",
+        "summary_selector": None,
+        "date_selector": None
+    },
+    {
+        "name": "Financial Times Energy",
+        "url": "https://www.ft.com/energy",
+        "article_tag": "article",
+        "headline_selector": "a.js-teaser-heading-link",
+        "summary_selector": "p",
+        "date_selector": None
+    }
+]
+
+
+def fetch_articles(source):
+    headers = {'User-Agent': 'Mozilla/5.0 (RenewableCrawlerBot/1.0)'}
+    try:
+        res = requests.get(source["url"], headers=headers, timeout=10)
+        soup = BeautifulSoup(res.content, 'html.parser')
+        articles = soup.find_all(source["article_tag"])
+
+        output = []
+        for article in articles[:5]:
+            try:
+                title_tag = article.select_one(source["headline_selector"])
+                title = title_tag.get_text(strip=True) if title_tag else "No title"
+                url = title_tag['href'] if title_tag and title_tag.has_attr('href') else source["url"]
+
+                summary = article.select_one(source["summary_selector"]).get_text(strip=True) if source["summary_selector"] else ""
+                date = datetime.today().strftime("%Y-%m-%d")
+                if source["date_selector"]:
+                    date_tag = article.select_one(source["date_selector"])
+                    if date_tag:
+                        date = date_tag.get("datetime") or date_tag.get_text(strip=True)
+
+                output.append({
+                    "title": title,
+                    "url": url if url.startswith("http") else source["url"] + url,
+                    "summary": summary,
+                    "date": date,
+                    "source": source["name"]
+                })
+            except Exception as e:
+                continue
+
+        return output
+    except Exception as e:
+        print(f"Failed to fetch from {source['name']}: {e}")
+        return []
+
+
+def crawl_all_sources():
+    all_articles = []
+    for source in news_sources:
+        articles = fetch_articles(source)
+        all_articles.extend(articles)
+
+    return all_articles
+
+
+if __name__ == "__main__":
+    articles = crawl_all_sources()
+    for article in articles:
+        print(f"[{article['date']}] {article['title']} ({article['source']})")
+        print(f"{article['url']}")
+        print(f"Summary: {article['summary']}\n")
