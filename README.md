@@ -11,7 +11,7 @@
     h2 { border-bottom: 2px solid #ccc; padding-bottom: 5px; }
     article { margin: 15px 0; padding: 10px; border-left: 4px solid #000a60; }
     article h3 { margin: 0 0 5px 0; }
-    .meta { font-size: 0.9em; color: #666; }
+    .meta { font-size: 0.9em; color: #ffffff; }
     .tags { margin-top: 5px; font-size: 0.9em; }
     footer { text-align: center; padding: 20px; color: #999; }
   </style>
